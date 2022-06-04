@@ -36,6 +36,8 @@ namespace Controllers
         {
             description ??= defaultGameDescription;
 
+            var cam = Camera.main;
+
             _currentStart = _diContainer.InstantiatePrefab(startZonePrefab);
             _currentStart.transform.position = description.startPosition;
             
@@ -47,9 +49,21 @@ namespace Controllers
                 var newRoach = _diContainer.InstantiatePrefabForComponent<Cockroach>(cockroachPrefab);
                 newRoach.transform.position = _currentStart.transform.position;
                 newRoach.transform.rotation = Quaternion.Euler(0,0, Random.Range(0, 365f));
+                newRoach.RightUpperScreenCorner = GetRightUpperScreenCorner(cam);
+                newRoach.LeftDownScreenCorner = GetLeftDownScreenCorner(cam);
                 Cockroaches.Add(newRoach);
             }
             
+        }
+
+        private Vector2 GetLeftDownScreenCorner(Camera cam)
+        {
+            return cam.ScreenToWorldPoint(Vector3.zero);
+        }
+
+        private Vector2 GetRightUpperScreenCorner(Camera cam)
+        {
+            return cam.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height));
         }
 
         public void Gameover()

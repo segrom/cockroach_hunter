@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   saveMovingSpeed: 1
   saveRotationSpeed: 50
-  dangerMovingSpeed: 4
-  dangerRotationSpeed: 200
+  dangerMinMovingSpeed: 1
+  dangerMinRotationSpeed: 100
+  dangerMaxMovingSpeed: 10
+  dangerMaxRotationSpeed: 500
   triggerRadius: 2
   saveRadius: 3

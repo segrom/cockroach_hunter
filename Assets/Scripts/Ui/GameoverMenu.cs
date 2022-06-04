@@ -38,16 +38,16 @@ namespace CockroachHunter.Ui
         {
             yield return base.Open();
             var sequence = DOTween.Sequence();
-            sequence.Append(title.transform.DOScaleX(1, 0.5f).SetEase(Ease.OutCirc));
-            sequence.Join(restartButton.transform.DOScaleX(1, .5f).SetEase(Ease.OutCirc));
+            sequence.Append(title.transform.DOScaleX(1, 0.2f).SetEase(Ease.OutCirc));
+            sequence.Append(restartButton.transform.DOScaleX(1, .3f).SetEase(Ease.OutCirc));
             yield return sequence.WaitForCompletion();
         }
 
         public override IEnumerator Close()
         {
             var sequence = DOTween.Sequence();
-            sequence.Append(title.transform.DOScaleX(0, 0.5f).SetEase(Ease.OutCirc));
-            sequence.Join(restartButton.transform.DOScaleX(0, .5f).SetEase(Ease.OutCirc));
+            sequence.Append(title.transform.DOScaleX(0, 0.2f).SetEase(Ease.OutCirc));
+            sequence.Append(restartButton.transform.DOScaleX(0, .3f).SetEase(Ease.OutCirc));
             yield return sequence.WaitForCompletion();
             yield return base.Close();
         }

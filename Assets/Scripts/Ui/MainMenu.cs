@@ -17,7 +17,7 @@ namespace CockroachHunter.Ui
 
         private void Start()
         {
-            startButton.transform.DOScaleX(0, 0f);
+            startButton.transform.DOScaleY(0, 0f);
             startButton.onClick.AddListener(() =>
             {
                 _uiController.StartCoroutine(StartGame());
@@ -33,12 +33,12 @@ namespace CockroachHunter.Ui
         public override IEnumerator Open()
         {
             yield return base.Open();
-            yield return startButton.transform.DOScaleX( 1, .5f).SetEase(Ease.OutCirc).WaitForCompletion();
+            yield return startButton.transform.DOScaleY( 1, .5f).SetEase(Ease.OutCubic).WaitForCompletion();
         }
         
         public override IEnumerator Close()
         {
-            yield return startButton.transform.DOScaleX( 0, .5f).SetEase(Ease.OutCirc).WaitForCompletion();
+            yield return startButton.transform.DOScaleY( 0, .5f).SetEase(Ease.InCubic).WaitForCompletion();
             yield return base.Close();
         }
     }

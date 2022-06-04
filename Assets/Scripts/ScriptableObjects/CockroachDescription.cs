@@ -6,7 +6,8 @@ namespace CockroachHunter.ScriptableObjects
     public class CockroachDescription : ScriptableObject
     {
         public float saveMovingSpeed, saveRotationSpeed;
-        public float dangerMovingSpeed, dangerRotationSpeed;
+        public float dangerMinMovingSpeed, dangerMinRotationSpeed;
+        public float dangerMaxMovingSpeed, dangerMaxRotationSpeed;
         public float triggerRadius, saveRadius;
     }
 }

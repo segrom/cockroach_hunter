@@ -30,8 +30,7 @@ namespace Controllers
 
             _menus = new List<UiMenu>();
             _menus = _uiRoot.GetComponentsInChildren<UiMenu>().ToList();
-            print($"menus founded {_menus.Count}");
-            
+
             foreach (UiMenu menu in _menus)
             {
                 if(menu.GetType() == _startMenuType)

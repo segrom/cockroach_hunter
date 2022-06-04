@@ -8,7 +8,10 @@ namespace CockroachHunter
 {
     public class Cockroach: Movable
     {
-        [SerializeField] private CockroachDescription cockroachDescription;
+        public Vector2 RightUpperScreenCorner { get; set; }
+        public Vector2 LeftDownScreenCorner { get; set; }
+        
+        [SerializeField] private CockroachDescription description;
         [Space]
         [SerializeField] private SpriteRenderer leftLegRenderer;
         [SerializeField] private SpriteRenderer rightLegRenderer;
@@ -19,7 +22,6 @@ namespace CockroachHunter
         [SerializeField] private Eye rightEye;
         
         [Inject] private GameController _gameController;
-        
 
         private bool _isInSave = true;
         private bool _isLegsSwitched;
@@ -30,7 +32,7 @@ namespace CockroachHunter
         {
             base.Awake();
             _input = new MainActions();
-            SetSpeedsBySafety();
+            SetSpeedsBySafety(Vector2.zero);
             Target.Value = _gameController.Finish.transform.position;
         }
         
@@ -40,22 +42,23 @@ namespace CockroachHunter
 
             var pointerPos = (Vector2)Camera.main.ScreenToWorldPoint( _input.Hunter.PointerPosition.ReadValue<Vector2>());
 
-            if (_isInSave && Vector3.Distance(pointerPos, transform.position) < cockroachDescription.triggerRadius)
+            if (_isInSave && Vector2.Distance(pointerPos, transform.position) < description.triggerRadius)
             {
                 _isInSave = false;
                 Target.Value = GetSaveTarget(pointerPos);
-                SetSpeedsBySafety();
+                SetSpeedsBySafety(pointerPos);
             }
 
-            if (!_isInSave && Vector3.Distance(pointerPos, transform.position) > cockroachDescription.saveRadius)
+            if (!_isInSave && Vector2.Distance(pointerPos, transform.position) > description.saveRadius)
             {
                 _isInSave = true;
                 Target.Value = _gameController.Finish.transform.position;
-                SetSpeedsBySafety();
+                SetSpeedsBySafety(pointerPos);
             }
 
             if (!_isInSave)
             {
+                SetSpeedsBySafety(pointerPos);
                 Target.Value = GetSaveTarget(pointerPos);
                 leftEye.target = rightEye.target = pointerPos;
             }
@@ -77,13 +80,28 @@ namespace CockroachHunter
 
         private Vector2 GetSaveTarget(Vector3 pointerPos)
         {
-            return transform.position + (transform.position - pointerPos).normalized * cockroachDescription.saveRadius;
+            var pos = transform.position;
+            var target = pos + (pos - pointerPos).normalized * description.saveRadius;
+            
+            if (target.x < LeftDownScreenCorner.x || target.x > RightUpperScreenCorner.x) 
+                target = new Vector3(pos.x + (pos.x - target.x) * .5f, target.y);
+            
+            if (target.y < LeftDownScreenCorner.y || target.y > RightUpperScreenCorner.y) 
+                target = new Vector3(target.x, pos.y + (pos.y - target.y) * .5f);
+            return target;
         }
 
-        private void SetSpeedsBySafety()
+        private void SetSpeedsBySafety(Vector2 pointerPos)
         {
-            MovingSpeed =_isInSave? cockroachDescription.saveMovingSpeed : cockroachDescription.dangerMovingSpeed;
-            RotationSpeed =_isInSave? cockroachDescription.saveRotationSpeed : cockroachDescription.dangerRotationSpeed;
+            if (_isInSave)
+            {
+                MovingSpeed = description.saveMovingSpeed;
+                RotationSpeed = description.saveRotationSpeed;
+                return;
+            }
+            var dangerRatio = Vector2.Distance(pointerPos, transform.position) / description.saveRadius;
+            MovingSpeed = Mathf.Lerp( description.dangerMaxMovingSpeed, description.dangerMinMovingSpeed, dangerRatio );
+            RotationSpeed = Mathf.Lerp(description.dangerMaxRotationSpeed, description.dangerMinRotationSpeed, dangerRatio);
         }
         
         private void OnEnable()
@@ -96,5 +114,12 @@ namespace CockroachHunter
             _input.Disable();
         }
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawCube(RightUpperScreenCorner, Vector3.one);
+            Gizmos.DrawCube(LeftDownScreenCorner, Vector3.one);
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(Target.Value, 1f);
+        }
     }
 }
