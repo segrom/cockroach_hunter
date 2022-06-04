@@ -43,6 +43,11 @@ namespace Controllers
             StartCoroutine(_currentMenu.Open());
         }
 
+        /// <summary>
+        /// Close current menu and find and open menu by type
+        /// </summary>
+        /// <typeparam name="T">New menu type</typeparam>
+        /// <returns>Coroutine</returns>
         public IEnumerator OpenMenu<T>()
         where T: UiMenu
         {

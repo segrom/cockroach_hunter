@@ -12,7 +12,13 @@ namespace Controllers
 {
     public class GameController : MonoBehaviour
     {
+        /// <summary>
+        /// All roaches in current session
+        /// </summary>
         public List<Cockroach> Cockroaches { get; private set; }
+        /// <summary>
+        /// Current session finish
+        /// </summary>
         public FinishZone Finish => _currentFinish;
 
         [SerializeField] private Cockroach cockroachPrefab;
@@ -32,6 +38,10 @@ namespace Controllers
             Cockroaches = new List<Cockroach>();
         }
         
+        /// <summary>
+        /// Remove all current session objects and spawn new from description
+        /// </summary>
+        /// <param name="description">New session description</param>
         public void StartGame(GameDescription description = null)
         {
             description ??= defaultGameDescription;
@@ -44,7 +54,7 @@ namespace Controllers
             _currentFinish = _diContainer.InstantiatePrefabForComponent<FinishZone>(finishZonePrefab);
             _currentFinish.transform.position = description.finishPosition;
 
-            for (int i = 0; i < description.cockroachCount; i++)
+            for (int i = 0; i < description.cockroachNumber; i++)
             {
                 var newRoach = _diContainer.InstantiatePrefabForComponent<Cockroach>(cockroachPrefab);
                 newRoach.transform.position = _currentStart.transform.position;
@@ -66,6 +76,9 @@ namespace Controllers
             return cam.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height));
         }
 
+        /// <summary>
+        /// Remove all current session objects and go to gameover screen
+        /// </summary>
         public void Gameover()
         {
             if (Cockroaches.Count > 0)

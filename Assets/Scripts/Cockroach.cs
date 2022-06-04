@@ -8,7 +8,13 @@ namespace CockroachHunter
 {
     public class Cockroach: Movable
     {
+        /// <summary>
+        /// Right upper use in danger target calculations 
+        /// </summary>
         public Vector2 RightUpperScreenCorner { get; set; }
+        /// <summary>
+        /// Left down use in danger target calculations 
+        /// </summary>
         public Vector2 LeftDownScreenCorner { get; set; }
         
         [SerializeField] private CockroachDescription description;
@@ -16,6 +22,7 @@ namespace CockroachHunter
         [SerializeField] private SpriteRenderer leftLegRenderer;
         [SerializeField] private SpriteRenderer rightLegRenderer;
         [SerializeField] private Sprite upLegsSprite, downLegsSprite;
+        [Tooltip("How much a cockroach need to move to switch legs")]
         [SerializeField] private float legsSwitchDistance;
         [Space]
         [SerializeField] private Eye leftEye;
@@ -42,33 +49,36 @@ namespace CockroachHunter
 
             var pointerPos = (Vector2)Camera.main.ScreenToWorldPoint( _input.Hunter.PointerPosition.ReadValue<Vector2>());
 
+            //Toggle behaviour mode 
             if (_isInSave && Vector2.Distance(pointerPos, transform.position) < description.triggerRadius)
             {
                 _isInSave = false;
                 Target.Value = GetSaveTarget(pointerPos);
                 SetSpeedsBySafety(pointerPos);
             }
-
             if (!_isInSave && Vector2.Distance(pointerPos, transform.position) > description.saveRadius)
             {
                 _isInSave = true;
                 Target.Value = _gameController.Finish.transform.position;
                 SetSpeedsBySafety(pointerPos);
             }
-
+            
             if (!_isInSave)
             {
+                //Danger mode
                 SetSpeedsBySafety(pointerPos);
                 Target.Value = GetSaveTarget(pointerPos);
                 leftEye.target = rightEye.target = pointerPos;
             }
             else
             {
+                //Save mode
                 leftEye.target = rightEye.target = Target.Value;
             }
             
+            
+            //Lags switching
             _walkedDistance += Velocity.magnitude * Time.deltaTime;
-
             if (_walkedDistance > legsSwitchDistance)
             {
                 _walkedDistance = 0;
@@ -114,6 +124,7 @@ namespace CockroachHunter
             _input.Disable();
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.DrawCube(RightUpperScreenCorner, Vector3.one);
@@ -121,5 +132,6 @@ namespace CockroachHunter
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(Target.Value, 1f);
         }
+#endif
     }
 }

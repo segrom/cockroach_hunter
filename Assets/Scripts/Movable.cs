@@ -6,6 +6,9 @@ namespace CockroachHunter
 {
     public class Movable : MonoBehaviour
     {
+        /// <summary>
+        /// Current movement target position
+        /// </summary>
         protected BindingValue<Vector2> Target { get; set; }
         protected Vector2 Velocity { get; private set; }
         protected float MovingSpeed { get; set; }
@@ -13,12 +16,10 @@ namespace CockroachHunter
         
         
         private Vector2 _lastPosition;
-        private Quaternion _targetRotation;
 
         protected virtual void Awake()
         {
             Target = new BindingValue<Vector2>();
-            _targetRotation = transform.rotation;
         }
 
         protected virtual void Update()

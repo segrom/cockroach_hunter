@@ -5,6 +5,9 @@ namespace CockroachHunter
 {
     public class Eye : MonoBehaviour
     {
+        /// <summary>
+        /// Eye looking target
+        /// </summary>
         public Vector2 target;
 
         [SerializeField] private Transform pupil;
