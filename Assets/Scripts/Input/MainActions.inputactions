@@ -1,0 +1,46 @@
+{
+    "name": "MainActions",
+    "maps": [
+        {
+            "name": "Hunter",
+            "id": "7c150413-3a84-400f-8a80-91229f9ec31a",
+            "actions": [
+                {
+                    "name": "PointerPosition",
+                    "type": "Value",
+                    "id": "7889bd31-d0aa-474b-8e5f-8c66a06862f4",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "caa2121f-902b-4fe9-a242-c2abb0962eb9",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Pointer",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Pointer",
+            "bindingGroup": "Pointer",
+            "devices": [
+                {
+                    "devicePath": "<Pointer>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}
